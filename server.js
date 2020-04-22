@@ -1,7 +1,6 @@
 const express = require('express'); // charger expressjs
 const fs = require('fs');
-const promise = require('./getdrivefiles');
-const del = require('./deletefiles');
+const promise = require('./functions');
 
 const app = express();
 app.use('/', express.static('./frontend/JS_alps-drive-project-frontend')); // faire en sorte que notre arrivée sur localhost:3000/ renvoie sur les fichiers statics du dossier frontend
@@ -14,9 +13,31 @@ app.get('/api/drive', (req, res) => {
         .catch(error => res.send('Pas bon'));
 })
 
+// Etape 7.2
+app.get('/api/drive/:name', async (req, res) => {
+    try {
+        const files = promise.openDir(req.params.name);
+        res.send(files)
+    } catch {
+        res.status(404).send('error');
+    }
+})
+
+//Etape 7.3
+
+app.post('/api/drive', async (req, res) => {
+    try {
+        const paramsValue = req.query.name;
+        const files = await promise.createDir(paramsValue);
+        res.send(files)
+    } catch {
+        res.status(404).send('error');
+    }
+});
+
 // Etape 7.5
 app.delete('/api/drive/:name', (req, res) => {
-    del.remove(req.params.name) // on passe en paramètre de la fonction le paramètre que l'on souhaite récupèrer de l'url
+    promise.remove(req.params.name) // on passe en paramètre de la fonction le paramètre que l'on souhaite récupèrer de l'url
         .then(() => res.send())
         .catch((err) => res.status(404).send(err));
 })
