@@ -1,9 +1,13 @@
-const fs = require('fs');
+import * as fs from 'fs';
+import {join} from 'path';
+import {tmpdir} from 'os';
+
+const root = join(tmpdir(), 'appdrive'); // voir node js doc pour bien comprendre
 
 // Etape 7.1 : Retourne une liste contenant les dossiers et fichiers à la racine du “drive”
 function readAlpsDir() {
     const options = {withFileTypes: true};
-    const readdirPromise = fs.promises.readdir('/tmp/appdrive', options);
+    const readdirPromise = fs.promises.readdir(root, options);
     const readAlpsDir = readdirPromise
         .then(files => {
             // files : ['file1', 'file2']
@@ -19,7 +23,7 @@ function readAlpsDir() {
 
 async function openDir(name) {
     const options = {withFileTypes: true};
-    const files = await fs.promises.readdir('/tmp/appdrive/' + name, options);
+    const files = await fs.promises.readdir(join(root, name), options);
     return files.map(file => (
             {
                 name: file.name,
@@ -35,13 +39,21 @@ async function openDir(name) {
 
 async function createDir(dir) {
     // if (!fs.exists(dir))
-  fs.mkdir('/tmp/appdrive/' + dir, { recursive: true}, (err) => {
-      if(err) throw err;
-  });
+    fs.mkdir(join(root, dir), {recursive: true}, (err) => {
+        if (err) throw err;
+    });
 
 }
 
 // Etape 7.4 : Créer un dossier avec le nom {name} dans {folder}
+
+async function createDirFolder(folder, paramsValue) {
+    // if (!fs.exists(dir))
+    fs.mkdir(join(root, folder, paramsValue), {recursive: true}, (err) => {
+        if (err) throw err;
+    });
+}
+
 // Etape 7.5 : Suppression d’un dossier ou d’un fichier avec le nom {name}
 
 function remove(name) {
@@ -56,8 +68,7 @@ function remove(name) {
     return rm;
 }
 
-module.exports = {readAlpsDir, openDir, createDir, remove}; // exporter tous les modules à la fin
-
+export {readAlpsDir, openDir, createDir, createDirFolder, remove}; // exporter tous les modules à la fin
 // Etape 7.6 : Suppression d’un dossier ou d’un fichier avec le nom {name} dans {folder}
 // Etape 7.7 : Créer un fichier à la racine du “drive”
 // Etape 7.8 : Créer un fichier dans {folder}

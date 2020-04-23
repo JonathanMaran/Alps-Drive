@@ -1,6 +1,7 @@
-const server = require('./server');
-const fs = require('fs');
-const os = require('os');
+import * as server from './server.js';
+import * as fs from 'fs';
+import * as os from 'os';
+
 
 fs.mkdir(os.tmpdir() + '/appdrive', { recursive: true }, (err) => {
     if (err) throw err;

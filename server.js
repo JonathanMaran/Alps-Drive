@@ -1,6 +1,5 @@
-const express = require('express'); // charger expressjs
-const fs = require('fs');
-const promise = require('./functions');
+import express from 'express';// charger expressjs
+import * as promise from './functions.js';
 
 const app = express();
 app.use('/', express.static('./frontend/JS_alps-drive-project-frontend')); // faire en sorte que notre arrivée sur localhost:3000/ renvoie sur les fichiers statics du dossier frontend
@@ -16,7 +15,7 @@ app.get('/api/drive', (req, res) => {
 // Etape 7.2
 app.get('/api/drive/:name', async (req, res) => {
     try {
-        const files = promise.openDir(req.params.name);
+        const files = await promise.openDir(req.params.name);
         res.send(files)
     } catch {
         res.status(404).send('error');
@@ -32,6 +31,19 @@ app.post('/api/drive', async (req, res) => {
         res.send(files)
     } catch {
         res.status(404).send('error');
+    }
+});
+
+//Etape 7.4
+
+app.post('/api/drive/:folder', async (req, res) => {
+    try {
+        const folder = req.params.folder;
+        const paramsValue = req.query.name;
+        const files = await promise.createDirFolder(folder, paramsValue);
+        res.send(files)
+    } catch {
+        res.status(404).send('errttttor');
     }
 });
 
@@ -60,4 +72,5 @@ function start() {
 }
 
 // forme différente de openclassroom
-module.exports = {start};
+// module.exports = {start};
+export {start};
