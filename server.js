@@ -49,9 +49,17 @@ app.post('/api/drive/:folder', async (req, res) => {
 
 // Etape 7.5
 app.delete('/api/drive/:name', (req, res) => {
-    promise.remove(req.params.name) // on passe en paramètre de la fonction le paramètre que l'on souhaite récupèrer de l'url
+    promise.remove('', req.params.name) // on passe en paramètre de la fonction le paramètre que l'on souhaite récupèrer de l'url
         .then(() => res.send())
         .catch((err) => res.status(404).send(err));
+})
+
+//Etape 7.6
+
+app.delete('/api/drive/:folder/:name', (req, res) => {
+    promise.remove(req.params.folder, req.params.name) // on passe en paramètre de la fonction le paramètre que l'on souhaite récupèrer de l'url
+        .then(() => res.send())
+        .catch((err) => res.status(404).send('caca'));
 })
 
 
@@ -61,7 +69,6 @@ app.use(function (req, res, next) {
     res.setHeader('Content-Type', 'text/plain');
     res.status(404).send('Page introuvable !');
 });
-
 
 // Bonne pratique, fonction start
 

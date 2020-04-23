@@ -56,13 +56,13 @@ async function createDirFolder(folder, paramsValue) {
 
 // Etape 7.5 : Suppression d’un dossier ou d’un fichier avec le nom {name}
 
-function remove(name) {
-    const rm = fs.promises.stat('/tmp/appdrive/' + name) //stat, récupérer les données d'un répertoire ou d'un fichier (poids ...)
+function remove(folder, name) {
+    const rm = fs.promises.stat(join(root, folder, name)) //stat, récupérer les données d'un répertoire ou d'un fichier (poids ...)
         .then((result) => {
             if (result.isDirectory()) { // fs, isDirectory permet de savoir si le dossier/fichier récupérer est un répertoire
-                return fs.promises.rmdir('/tmp/appdrive/' + name, {recursive: true}) // si c'est un répertoire, alors je supprime le répertoire en question
+                return fs.promises.rmdir(join(root, folder, name), {recursive: true}); // si c'est un répertoire, alors je supprime le répertoire en question
             } else {
-                return fs.promises.unlink('/tmp/appdrive/' + name) // si c'est un fichier, je supprime le fichier en question
+                return fs.promises.unlink(join(root, folder, name)) // si c'est un fichier, je supprime le fichier en question
             }
         })
     return rm;
