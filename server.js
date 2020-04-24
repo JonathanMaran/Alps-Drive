@@ -33,7 +33,7 @@ app.post('/api/drive', async (req, res) => {
                 const files = await promise.createDir(paramsValue);
                 res.send(files)
             } catch {
-                res.status(400).send('Caractères non-alphanumériques non autorisés')
+                res.status(404).send('404 error')
             }
         } else {
             res.status(400).send('Caractères non-alphanumériques non autorisés');
@@ -44,13 +44,17 @@ app.post('/api/drive', async (req, res) => {
 //Etape 7.4
 
 app.post('/api/drive/:folder', async (req, res) => {
-    try {
-        const folder = req.params.folder;
-        const paramsValue = req.query.name;
-        const files = await promise.createDirFolder(folder, paramsValue);
-        res.send(files)
-    } catch {
-        res.status(404).send('errttttor');
+    if (reg.test(req.query.name)) {
+        try {
+            const folder = req.params.folder;
+            const paramsValue = req.query.name;
+            const files = await promise.createDirFolder(folder, paramsValue);
+            res.send(files)
+        } catch {
+            res.status(404).send('404 error');
+        }
+    } else {
+        res.status(400).send('Caractères non-alphanumériques non autorisés');
     }
 });
 
