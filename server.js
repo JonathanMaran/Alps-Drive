@@ -1,5 +1,6 @@
 import express from 'express';// charger expressjs
 import * as promise from './functions.js';
+import busboy from 'express-busboy';
 
 const app = express();
 app.use('/', express.static('./frontend/JS_alps-drive-project-frontend')); // faire en sorte que notre arrivée sur localhost:3000/ renvoie sur les fichiers statics du dossier frontend
@@ -59,7 +60,24 @@ app.delete('/api/drive/:name', (req, res) => {
 app.delete('/api/drive/:folder/:name', (req, res) => {
     promise.remove(req.params.folder, req.params.name) // on passe en paramètre de la fonction le paramètre que l'on souhaite récupèrer de l'url
         .then(() => res.send())
-        .catch((err) => res.status(404).send('caca'));
+        .catch((err) => res.status(404).send(err));
+})
+
+//Etape 7.7
+
+busboy.extend(app, {
+    upload: true,
+    path: '/tmp/'
+})
+app.put('/api/drive/', async (req, res) => {
+    console.log(req.files);
+    console.log(req.files.file.filename)
+    try {
+       const files = await promise.uploadFile(req.files.file.file, req.files.file.filename)
+        res.send(files)
+    } catch {
+        res.status(404).send('error');
+    }
 })
 
 

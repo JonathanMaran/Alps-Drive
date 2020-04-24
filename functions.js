@@ -54,7 +54,7 @@ async function createDirFolder(folder, paramsValue) {
     });
 }
 
-// Etape 7.5 : Suppression d’un dossier ou d’un fichier avec le nom {name}
+// Etape 7.5 et 7.6 : Suppression d’un dossier ou d’un fichier avec le nom {name} et Suppression d’un dossier ou d’un fichier avec le nom {name} dans {folder}
 
 function remove(folder, name) {
     const rm = fs.promises.stat(join(root, folder, name)) //stat, récupérer les données d'un répertoire ou d'un fichier (poids ...)
@@ -68,7 +68,14 @@ function remove(folder, name) {
     return rm;
 }
 
-export {readAlpsDir, openDir, createDir, createDirFolder, remove}; // exporter tous les modules à la fin
-// Etape 7.6 : Suppression d’un dossier ou d’un fichier avec le nom {name} dans {folder}
+
 // Etape 7.7 : Créer un fichier à la racine du “drive”
+
+async function uploadFile(oldPath, newPath) {
+    fs.rename(oldPath, join(root, newPath), (err) => {
+       if(err) throw err;
+    })
+}
 // Etape 7.8 : Créer un fichier dans {folder}
+
+export {readAlpsDir, openDir, createDir, createDirFolder, remove, uploadFile}; // exporter tous les modules à la fin

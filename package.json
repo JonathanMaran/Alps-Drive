@@ -20,7 +20,9 @@
   },
   "homepage": "https://github.com/JonathanMaran/Alps-Drive#readme",
   "dependencies": {
+    "busboy": "^0.3.1",
     "express": "^4.17.1",
+    "express-busboy": "^8.0.0",
     "nodemon": "^2.0.3"
   }
 }
