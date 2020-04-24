@@ -22,6 +22,7 @@ function readAlpsDir() {
 // Etape 7.2 : Retourne le contenu de {name}
 
 async function openDir(name) {
+
     const options = {withFileTypes: true};
     const files = await fs.promises.readdir(join(root, name), options);
     return files.map(file => (
@@ -38,11 +39,9 @@ async function openDir(name) {
 // Etape 7.3 : Créer un dossier avec le nom {name}
 
 async function createDir(dir) {
-    // if (!fs.exists(dir))
     fs.mkdir(join(root, dir), {recursive: true}, (err) => {
         if (err) throw err;
     });
-
 }
 
 // Etape 7.4 : Créer un dossier avec le nom {name} dans {folder}
@@ -73,9 +72,10 @@ function remove(folder, name) {
 
 async function uploadFile(folder, oldPath, newPath) {
     fs.rename(oldPath, join(root, folder, newPath), (err) => {
-       if(err) throw err;
+        if (err) throw err;
     })
 }
+
 // Etape 7.8 : Créer un fichier dans {folder}
 
 export {readAlpsDir, openDir, createDir, createDirFolder, remove, uploadFile}; // exporter tous les modules à la fin

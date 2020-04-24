@@ -2,6 +2,7 @@ import express from 'express';// charger expressjs
 import * as promise from './functions.js';
 import busboy from 'express-busboy';
 
+const reg = /^[\d\w\s]+$/;
 const app = express();
 app.use('/', express.static('./frontend/JS_alps-drive-project-frontend')); // faire en sorte que notre arrivée sur localhost:3000/ renvoie sur les fichiers statics du dossier frontend
 
@@ -19,21 +20,26 @@ app.get('/api/drive/:name', async (req, res) => {
         const files = await promise.openDir(req.params.name);
         res.send(files)
     } catch {
-        res.status(404).send('error');
+        res.status(404).send('404 error');
     }
 })
 
 //Etape 7.3
 
 app.post('/api/drive', async (req, res) => {
-    try {
-        const paramsValue = req.query.name;
-        const files = await promise.createDir(paramsValue);
-        res.send(files)
-    } catch {
-        res.status(404).send('error');
+        if (reg.test(req.query.name)) {
+            try {
+                const paramsValue = req.query.name;
+                const files = await promise.createDir(paramsValue);
+                res.send(files)
+            } catch {
+                res.status(400).send('Caractères non-alphanumériques non autorisés')
+            }
+        } else {
+            res.status(400).send('Caractères non-alphanumériques non autorisés');
+        }
     }
-});
+);
 
 //Etape 7.4
 
@@ -73,7 +79,7 @@ app.put('/api/drive/', async (req, res) => {
     console.log(req.files);
     console.log(req.files.file.filename)
     try {
-       const files = await promise.uploadFile('', req.files.file.file, req.files.file.filename)
+        const files = await promise.uploadFile('', req.files.file.file, req.files.file.filename)
         res.send(files)
     } catch {
         res.status(404).send('error');
@@ -92,7 +98,6 @@ app.put('/api/drive/:folder', async (req, res) => {
         res.status(404).send('error');
     }
 })
-
 
 
 // ... Tout le code de gestion des routes (app.get) se trouve au-dessus
