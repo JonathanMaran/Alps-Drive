@@ -73,12 +73,26 @@ app.put('/api/drive/', async (req, res) => {
     console.log(req.files);
     console.log(req.files.file.filename)
     try {
-       const files = await promise.uploadFile(req.files.file.file, req.files.file.filename)
+       const files = await promise.uploadFile('', req.files.file.file, req.files.file.filename)
         res.send(files)
     } catch {
         res.status(404).send('error');
     }
 })
+
+//Etape 7.8
+
+app.put('/api/drive/:folder', async (req, res) => {
+    console.log(req.files);
+    console.log(req.files.file.filename)
+    try {
+        const files = await promise.uploadFile(req.params.folder, req.files.file.file, req.files.file.filename)
+        res.send(files)
+    } catch {
+        res.status(404).send('error');
+    }
+})
+
 
 
 // ... Tout le code de gestion des routes (app.get) se trouve au-dessus

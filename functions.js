@@ -71,8 +71,8 @@ function remove(folder, name) {
 
 // Etape 7.7 : Créer un fichier à la racine du “drive”
 
-async function uploadFile(oldPath, newPath) {
-    fs.rename(oldPath, join(root, newPath), (err) => {
+async function uploadFile(folder, oldPath, newPath) {
+    fs.rename(oldPath, join(root, folder, newPath), (err) => {
        if(err) throw err;
     })
 }
