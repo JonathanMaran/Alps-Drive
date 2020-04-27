@@ -1,13 +1,13 @@
-import * as fs from 'fs';
-import {join} from 'path';
-import {tmpdir} from 'os';
+import * as fs from 'fs'; // on charge le module fs
+import {join} from 'path'; // on charge join du module path
+import {tmpdir} from 'os'; // on charge tmpdir du module os
 
-const root = join(tmpdir(), 'appdrive'); // voir node js doc pour bien comprendre
+const root = join(tmpdir(), 'appdrive'); // création de la variable root qui comprend le chemin depuis le dossier temporaire tmpdir() / app drive (voir node js doc pour bien comprendre)
 
 // Etape 7.1 : Retourne une liste contenant les dossiers et fichiers à la racine du “drive”
 function readAlpsDir() {
-    const options = {withFileTypes: true};
-    const readdirPromise = fs.promises.readdir(root, options);
+    const options = {withFileTypes: true}; //permet
+    const readdirPromise = fs.promises.readdir(root, options); // création d'une promesse readdir prenant deux arguments root et options
     const readAlpsDir = readdirPromise
         .then(files => {
             // files : ['file1', 'file2']

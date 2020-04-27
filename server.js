@@ -1,36 +1,36 @@
 import express from 'express';// charger expressjs
-import * as promise from './functions.js';
-import busboy from 'express-busboy';
+import * as promise from './functions.js'; // charger ma page function.js
+import busboy from 'express-busboy'; // charger busboy depuis express-busboy
 
-const reg = /^[\d\w\s]+$/;
+const reg = /^[\d\w\s]+$/; // permet de filtrer les caractères autorisés
 const app = express();
 app.use('/', express.static('./frontend/JS_alps-drive-project-frontend')); // faire en sorte que notre arrivée sur localhost:3000/ renvoie sur les fichiers statics du dossier frontend
 
 //Etape 7.1
 
 app.get('/api/drive', (req, res) => {
-    promise.readAlpsDir()
-        .then(files => res.send(files))
-        .catch(error => res.send('Pas bon'));
+    promise.readAlpsDir() // on utilise la fonction readAlpsDir() de la page function
+        .then(files => res.send(files)) // retour si résolu
+        .catch(error => res.send('Pas bon')); // retour si rejeté
 })
 
 // Etape 7.2
-app.get('/api/drive/:name', async (req, res) => {
+app.get('/api/drive/:name', async (req, res) => { //fonction async, qui attend la résolution de la promesse
     try {
-        const files = await promise.openDir(req.params.name);
+        const files = await promise.openDir(req.params.name); //req.params requête pour obtenir la route de name
         res.send(files)
     } catch {
-        res.status(404).send('404 error');
+        res.status(404).send('404 error'); // si erreur, retour status 404 et message "404 erro"
     }
 })
 
 //Etape 7.3
 
 app.post('/api/drive', async (req, res) => {
-        if (reg.test(req.query.name)) {
+        if (reg.test(req.query.name)) { // on utilise le filtre à caractères créé plus haut, et si c'est le cas, on rentre dans la fonction async
             try {
-                const paramsValue = req.query.name;
-                const files = await promise.createDir(paramsValue);
+                const paramsValue = req.query.name; //req.query permet de récupérer le contenu d'un paramètre name
+                const files = await promise.createDir(paramsValue); // on passe en argument de la fonction le req.query
                 res.send(files)
             } catch {
                 res.status(404).send('404 error')
@@ -48,7 +48,7 @@ app.post('/api/drive/:folder', async (req, res) => {
         try {
             const folder = req.params.folder;
             const paramsValue = req.query.name;
-            const files = await promise.createDirFolder(folder, paramsValue);
+            const files = await promise.createDirFolder(folder, paramsValue); // 2 arguements à la fonction, le req.params puis le req.query
             res.send(files)
         } catch {
             res.status(404).send('404 error');
@@ -79,11 +79,11 @@ busboy.extend(app, {
     upload: true,
     path: '/tmp/'
 })
-app.put('/api/drive/', async (req, res) => {
-    console.log(req.files);
-    console.log(req.files.file.filename)
+app.put('/api/drive/', async (req, res) => { // on va uploader un fichier
+    console.log(req.files); // on fait une requête de notre fichier et obtenir plus d'informations sur notre objet
+    console.log(req.files.file.filename) // on cherche à obtenir le filename de notre upload
     try {
-        const files = await promise.uploadFile('', req.files.file.file, req.files.file.filename)
+        const files = await promise.uploadFile('', req.files.file.file, req.files.file.filename) // on passe 3 arguments à notre fonction
         res.send(files)
     } catch {
         res.status(404).send('error');
